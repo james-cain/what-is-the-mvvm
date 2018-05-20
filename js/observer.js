@@ -21,7 +21,10 @@ Observer.prototype = {
             configurable: false, // 不能define
             get: function() {
                 // 通过Dep定义一个全局target属性，暂存watcher，添加完移除
-                Dep.target && dep.addSub(Dep.target);
+                if (Dep.target) {
+                    dep.depend();
+                }
+                // Dep.target && dep.addSub(Dep.target);
                 return val;
             },
             set: function(newVal) {
@@ -36,12 +39,15 @@ Observer.prototype = {
     }
 }
 
-function observe(value) {
+function observe(value, vm) {
     if (!value || typeof value !== 'object') return;
     return new Observer(value);
 }
 
+var uid = 0;
+
 function Dep() {
+    this.id = uid++;
     this.subs = [];
 }
 
@@ -53,8 +59,13 @@ Dep.prototype = {
         this.subs.forEach(function (sub) {
             sub.update();
         });
+    },
+    depend: function() {
+        Dep.target.addDep(this);
     }
 }
+
+Dep.target = null;
 
 // test
 // var data = { name: 'xielei'};

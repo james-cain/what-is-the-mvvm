@@ -8,7 +8,8 @@ function MVVM(options) {
     Object.keys(data).forEach(function(key) {
         me._proxy(key);
     });
-    Observer(data, this);
+    this._initComputed();
+    observe(data, this);
     this.$compile = new Compile(options.el || document.body, this);
 }
 
@@ -25,5 +26,17 @@ MVVM.prototype = {
                 me._data[key] = newVal;
             }
         });
+    },
+    _initComputed: function() {
+        var me = this;
+        var computed = this.$options.computed;
+        if (typeof computed === 'object') {
+            Object.keys(computed).forEach(function(key) {
+                Object.defineProperty(me, key, {
+                    get: typeof computed[key] === 'function' ? computed[key] : computed[key].get,
+                    set: function() {}
+                });
+            });
+        }
     }
 };
