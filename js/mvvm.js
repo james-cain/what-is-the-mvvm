@@ -8,7 +8,7 @@ function MVVM(options) {
     Object.keys(data).forEach(function(key) {
         me._proxy(key);
     });
-    observe(data, this);
+    Observer(data, this);
     this.$compile = new Compile(options.el || document.body, this);
 }
 

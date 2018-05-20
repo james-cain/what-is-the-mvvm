@@ -3,10 +3,17 @@
 // 2. 自身必须有一个update方法
 // 3. 待属性变动dep.notice() 通知时，能调用自身的update()方法，并触发Compile中绑定的回调，over
 
-function Watcher(vm, exp, cb) {
+// expOrFn 有可能是watch或者computed或者属性
+function Watcher(vm, expOrFn, cb) {
     this.cb = cb;
     this.vm = vm;
-    this.exp = exp;
+    this.expOrFn = expOrFn;
+
+    if (typeof expOrFn === 'function') {
+        this.getter = expOrFn;
+    } else {
+        this.getter = this.parseGetter(expOrFn); // 返回取得属性方法的函数
+    }
     // 为了触发属性的getter，目的在dep中添加自己
     this.value = this.get();
 }
@@ -14,7 +21,7 @@ function Watcher(vm, exp, cb) {
 Watcher.prototype = {
     get: function(key) {
         Dep.target = this; // 将当前订阅者指向自己
-        var value = this.vm[exp]; // 触发getter，添加自己到属性订阅器中 ？
+        var value = this.getter.call(this.vm, this.vm);// 第二个this.vm是必须要的，作为参数传递到方法中 遍历查找发生变化的属性
         Dep.target = null; // 添加完毕后，重置为null
         return value;
     },
@@ -27,6 +34,18 @@ Watcher.prototype = {
         if (value !== oldVal) {
             this.value = value;
             this.cb.call(this.vm, value, oldVal); // 执行Compile中绑定的回调，更新视图
+        }
+    },
+    parseGetter: function(exp) {
+        if (/[^\w.$]/.test(exp)) return;
+        var exps = exp.split('.');
+
+        return function(obj) {
+            for (var i = 0, len = exps.length; i < len; i++) {
+                if (!obj) return;
+                obj = obj[exps[i]];
+            }
+            return obj;
         }
     }
 }
