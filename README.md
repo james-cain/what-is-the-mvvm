@@ -13,7 +13,7 @@ To be perfected：
 
 - Using proxy to realize the data watcher(vue 3).
 - ~~Computed~~
-- Watch
+- <u>Watch</u>（complete, not refer to official method）
 - Virtual dom
 - Diff
 - Event detection

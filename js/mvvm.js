@@ -9,6 +9,7 @@ function MVVM(options) {
         me._proxy(key);
     });
     this._initComputed();
+    // this._initWatch();
     observe(data, this);
     this.$compile = new Compile(options.el || document.body, this);
 }
@@ -38,5 +39,19 @@ MVVM.prototype = {
                 });
             });
         }
-    }
+    },
+    // _initWatch: function() {
+    //     var me = this;
+    //     var watch = this.$options.watch;
+    //     console.log('watching...');
+    //     if (typeof watch === 'object') {
+    //         Object.keys(watch).forEach(function(key) {
+    //             me.$watch(key, watch[key], me.$options);
+    //         });
+    //     }
+    // },
+    // $watch: function(key, cb, options) {
+    //     console.log('watched...', key);
+    //     new Watcher(this, key, cb, 'test');
+    // }
 };

@@ -12,6 +12,7 @@
         <input type="text" v-model="child.someStr">
         <p>{{getHelloWorld}}</p>
         <p v-html="child.someStr"></p>
+        <p>watch: {{watchStr}}</p>
         <button v-on:click="clickBtn">change model</button>
     </div>
 </body>
@@ -26,7 +27,8 @@
             someStr: 'hello',
             child: {
                 someStr: 'World!'
-            }
+            },
+            watchStr: ''
         },
         computed: {
             getHelloWorld: function() {
@@ -37,6 +39,13 @@
             clickBtn: function(e) {
                 var randomStrArr = ['childOne', 'childTwo', 'childThree'];
                 this.child.someStr = randomStrArr[parseInt(Math.random() * 3)];
+            }
+        },
+        watch: {
+            'child.someStr': function(options) {
+                console.log('watch success..');
+                console.log(options);
+                this.watchStr = 'watch success';
             }
         }
     });

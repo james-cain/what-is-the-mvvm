@@ -5,6 +5,7 @@
 
 // expOrFn 有可能是watch或者computed或者属性
 function Watcher(vm, expOrFn, cb) {
+    var me = this;
     this.cb = cb;
     this.vm = vm;
     this.expOrFn = expOrFn;
@@ -14,6 +15,13 @@ function Watcher(vm, expOrFn, cb) {
         this.getter = expOrFn;
     } else {
         this.getter = this.parseGetter(expOrFn); // 返回取得属性方法的函数
+        // 增加watch监听
+        Object.keys(vm.$options.watch).forEach(function(key) {
+            if (key === expOrFn) {
+                console.log('watched...');
+                me.watchcb = vm.$options.watch[key];
+            }
+        });
     }
     // 为了触发属性的getter，目的在dep中添加自己
     this.value = this.get();
@@ -35,6 +43,7 @@ Watcher.prototype = {
         if (value !== oldVal) {
             this.value = value;
             this.cb.call(this.vm, value, oldVal); // 执行Compile中绑定的回调，更新视图
+            this.watchcb&&this.watchcb.call(this.vm, value, oldVal); // watchcb存在，则执行
         }
     },
     parseGetter: function(exp) {
