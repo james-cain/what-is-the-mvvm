@@ -44,8 +44,7 @@
         watch: {
             'child.someStr': function(options) {
                 console.log('watch success..');
-                console.log(options);
-                this.watchStr = 'watch success';
+                this.watchStr = options;
             }
         }
     });
