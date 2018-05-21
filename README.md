@@ -1,19 +1,19 @@
 # Introduce the principle analysis of mvvm
-要实现mvvm的双向绑定，要实现以下：
+> I`ll achieve my goal about reading the source of vue.js from v1 to v2.
 
-1. 实现一个数据监听器Observer，对数据对象的所有属性进行监听，如有变动可拿到最新值并通知订阅者
-2. 实现一个指令解析器Compile，对每个元素节点的指令进行扫描和解析，根据指令替换模板替换数据，以及绑定相应的更新函数
-3. 实现一个Watcher，作为Observer和Compile的桥梁，能够订阅并收到每个属性变动的通知，执行指令绑定的响应回调函数，从而更新视图
-4. mvvm入口函数，整合以上三者
+If you want to achieve the goal in version 1, you should understand the following tips:
 
+1. Realizing a data observer. Once the data changes, observer will update all related-data real time and notice to the Watcher meanwhile.
+2. Realizing a directive compile.It will do something, like scaning all element nodes, analysing them according the directive function to change the template data.It also create a Watcher when recursion all element nodes, it aims to bind data when data updated.
+3. Realizing a Watcher.Purpose to relate observer and compile, you should create a bridge — the data watcher.When the data changed whatever it happened, it would run the callback that binding in running directive, and update the view.
+4. When realizing above, you should realize last steps about mvvm-entry to init the obsever, compile and watcher.
 
+To be perfected：
 
-完善：
-
-- 用proxy实现数据监听（vue 3）
-- 计算属性
-- 监听器
-- 虚拟dom
-- diff
-- 事件机制
+- Using proxy to realize the data watcher(vue 3).
+- Computed
+- Watch
+- Virtual dom
+- Diff
+- Event detection
 

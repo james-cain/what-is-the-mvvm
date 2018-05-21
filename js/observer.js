@@ -2,7 +2,7 @@ function Observer(data) {
     if (!data || typeof data !== 'object') {
         return;
     }
-    this.walk();
+    this.walk(data);
 }
 
 Observer.prototype = {

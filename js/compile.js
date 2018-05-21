@@ -63,7 +63,7 @@ Compile.prototype = {
         }
         return fragment;
     },
-    ifDirective: function(attr) {
+    isDirective: function(attr) {
         return attr.indexOf('v-') == 0;
     },
     isEventDirective: function(dir) {
@@ -102,8 +102,9 @@ var compileUtil = {
     },
     bind: function(node, vm, exp, dir) {
         var updaterFn = updater[dir + 'Updater'];
+        var me = this;
         // 第一次初始化视图
-        updaterFn && updateFn(node, vm[exp]); // ?
+        updaterFn && updaterFn(node, me._getVMVal(vm, exp));
         // 实例化订阅者，会在对应的属性消息订阅器中添加给订阅者watcher
         new Watcher(vm, exp, function(value, oldValue) {
             updaterFn && updaterFn(node, value, oldValue);
